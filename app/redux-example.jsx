@@ -25,7 +25,23 @@ var reducer = (state = {name: 'Anonymous'}, action) => {
 // createStore takes a pure func as an argument
 // this pure func is called reducer. 2 args. The state before the action and the action
 // this creates our app.
-var store = redux.createStore(reducer);
+// we use redux.compose for the redux dev tools, chrome
+var store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
+
+// Subscribe to changes. Store subscibe method that takes as an arg a callback for whenever an action occurs.
+// store.subscribe(() => {
+//   var state = store.getState();
+//   console.log('Name is', state.name);
+// });
+// store.subscribe return a method tha can be called to unsubscribe. So if using that we get this version. When we call unsubscribe, we unsubscribe.
+var unsubscribe = store.subscribe(() => {
+  var state = store.getState();
+  console.log('Name is', state.name);
+});
+// unsubscribe();
+
 
 var currentState = store.getState();
 console.log('currentState ', currentState);
@@ -40,4 +56,13 @@ var action = {
 // the dispatch method takes one arg. The action
 store.dispatch(action);
 
-console.log('Name should be Yorgos', store.getState())
+console.log('Name should be Yorgos', store.getState());
+
+store.dispatch({
+  type: 'CHANGE_NAME',
+  name: 'Ydrargyros'
+});
+
+console.log('Name should be Ydrargyros', store.getState());
+
+

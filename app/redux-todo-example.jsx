@@ -21,14 +21,29 @@ var reducer = (state = defaultState, action) => {
   }
 };
 
-var store = redux.createStore(reducer);
+var store = redux.createStore(reducer, redux.compose(
+  window.devToolsExtension ? window.devToolsExtension() : f => f
+));
 
-var currentState = store.getState();
-console.log('currentState ', currentState);
+var unsubscribe = store.subscribe(() => {
+  var state = store.getState();
+  console.log('The text is', state.searchText);
+   document.getElementById('app').innerHTML = state.searchText;
+});
+// unsubscribe();
+// var currentState = store.getState();
+// console.log('currentState ', currentState);
 
 store.dispatch({
   type: 'CHANGE_SEARCH_TEXT',
   searchText: 'Look it up'
+});
+
+console.log('Search text should be', store.getState());
+
+store.dispatch({
+  type: 'CHANGE_SEARCH_TEXT',
+  searchText: 'It\'s nice'
 });
 
 console.log('Search text should be', store.getState());
