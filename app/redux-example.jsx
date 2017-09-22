@@ -32,6 +32,12 @@ var reducer = (state = defaultState, action) => {
           }
         ]
       };
+    case 'REMOVE_MOVIE':
+      return {
+        ...state,
+        movies: state.movies.filter((movie) => movie.id !== action.id
+        )
+      };
     case 'ADD_HOBBY':
       return { // we create a new state
         ...state,
@@ -42,6 +48,12 @@ var reducer = (state = defaultState, action) => {
             hobby: action.hobby
           }
         ]
+      };
+    case 'REMOVE_HOBBY':
+      return {
+        ...state,
+        hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id
+        )
       };
     case 'CHANGE_NAME':
       return { // we create a new state
@@ -105,6 +117,11 @@ store.dispatch({
 });
 
 store.dispatch({
+  type: 'REMOVE_HOBBY',
+  id: 2
+});
+
+store.dispatch({
   type: 'ADD_MOVIE',
   title: 'Gravity pass',
   gendre: 'Action'
@@ -120,6 +137,11 @@ store.dispatch({
   type: 'ADD_MOVIE',
   title: 'The malakes',
   gendre: 'Comedy'
+});
+
+store.dispatch({
+  type: 'REMOVE_MOVIE',
+  id: 2
 });
 
 // console.log('Name should be Ydrargyros', store.getState());
