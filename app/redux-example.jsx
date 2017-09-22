@@ -17,7 +17,7 @@ var nextHobbyId = 1;
 var nextMovieId = 1;
 
 // another way with es6 is. The || above with the default fallback in the arg.
-var reducer = (state = defaultState, action) => {
+var oldReducer = (state = defaultState, action) => {
 
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -65,10 +65,64 @@ var reducer = (state = defaultState, action) => {
   }
 };
 
+var nameReducer = (state = 'Anonymous', action) => {
+  switch (action.type) {
+    case 'CHANGE_NAME':
+      return action.name
+    default:
+      return state;
+  }
+};
+
+var hobbiesReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_HOBBY':
+      return [ // the state in our reduceer in now an array
+        ...state,
+        {
+          id: nextHobbyId++,
+          hobby: action.hobby
+        }
+      ];
+    case 'REMOVE_HOBBY':
+      return state.filter((hobby) => hobby.id !== action.id
+        );
+    default:
+      return state;
+  }
+};
+
+var moviesReducer = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_MOVIE':
+      return [ // the state in our reduceer in now an array
+        ...state,
+        {
+          id: nextMovieId++,
+          movie: action.movie
+        }
+      ];
+    case 'REMOVE_MOVIE':
+      return state.filter((movie) => movie.id !== action.id
+        );
+    default:
+      return state;
+  }
+};
+
+// combineReducer takes one argument obj that represents the items in the state that we want the reduser to manage
+var reducer = redux.combineReducers({
+  name: nameReducer,
+  hobbies: hobbiesReducer,
+  movies: moviesReducer
+})
+
 // createStore takes a pure func as an argument
 // this pure func is called reducer. 2 args. The state before the action and the action
 // this creates our app.
 // we use redux.compose for the redux dev tools, chrome
+
+
 var store = redux.createStore(reducer, redux.compose(
   window.devToolsExtension ? window.devToolsExtension() : f => f
 ));
