@@ -2,19 +2,16 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var defaultState = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-}
+// var defaultState = {
+//   name: 'Anonymous',
+//   hobbies: [],
+//   movies: []
+// }
 
 // var reducer = (state, action) => {
 //   // we start with the default
 //   state = state || {name: 'Anonymous'};
 // }
-
-var nextHobbyId = 1;
-var nextMovieId = 1;
 
 // another way with es6 is. The || above with the default fallback in the arg.
 var oldReducer = (state = defaultState, action) => {
@@ -28,7 +25,7 @@ var oldReducer = (state = defaultState, action) => {
           {
             id: nextMovieId++,
             title: action.title,
-            gendre: action.gendre
+            genre: action.genre
           }
         ]
       };
@@ -64,7 +61,8 @@ var oldReducer = (state = defaultState, action) => {
       return state;
   }
 };
-
+// Name reducer and action generators
+// -----------------------------
 var nameReducer = (state = 'Anonymous', action) => {
   switch (action.type) {
     case 'CHANGE_NAME':
@@ -73,7 +71,17 @@ var nameReducer = (state = 'Anonymous', action) => {
       return state;
   }
 };
+// action generators are simple functions that take the necessary input and return the obj
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  }
+};
 
+// Hobbies reducer and action generators
+// -----------------------------
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_HOBBY':
@@ -92,6 +100,23 @@ var hobbiesReducer = (state = [], action) => {
   }
 };
 
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  }
+};
+
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  }
+};
+
+// Movies reducer and action generators
+// -----------------------------
+var nextMovieId = 1;
 var moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -107,6 +132,20 @@ var moviesReducer = (state = [], action) => {
         );
     default:
       return state;
+  }
+};
+
+var addMovie = (movie, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    movie
+  }
+};
+
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
   }
 };
 
@@ -160,10 +199,19 @@ store.dispatch({
   hobby: 'Painting'
 });
 
+//new way with action generators
+store.dispatch(addHobby('Hiking'));
+
+//new way with action generators
+store.dispatch(removeHobby(1));
+
 store.dispatch({
   type: 'CHANGE_NAME',
   name: 'Ydrargyros'
 });
+
+//new way with action generators
+store.dispatch(changeName('Falenos'));
 
 store.dispatch({
   type: 'ADD_HOBBY',
@@ -178,19 +226,19 @@ store.dispatch({
 store.dispatch({
   type: 'ADD_MOVIE',
   title: 'Gravity pass',
-  gendre: 'Action'
+  genre: 'Action'
 });
 
 store.dispatch({
   type: 'ADD_MOVIE',
   title: 'The city of who',
-  gendre: 'Sci-fi'
+  genre: 'Sci-fi'
 });
 
 store.dispatch({
   type: 'ADD_MOVIE',
   title: 'The malakes',
-  gendre: 'Comedy'
+  genre: 'Comedy'
 });
 
 store.dispatch({
@@ -198,6 +246,12 @@ store.dispatch({
   id: 2
 });
 
-// console.log('Name should be Ydrargyros', store.getState());
+//new way with action generators
+store.dispatch(addMovie('Gintama', 'Animation'));
+
+//new way with action generators
+store.dispatch(removeMovie(1));
+
+// console.log('Name should be Falenos', store.getState());
 
 
